@@ -35,8 +35,8 @@ class GoodsList {
 }
 
 class BasketGood extends Goods {
-    constructor (id, name, description, sizes, price, available, amount) {
-        super(id, name, description, sizes, price, available);
+    constructor (good, amount) {
+        super(good.id, good.name, good.description, good.sizes, good.price, good.available);
         this.amount = amount;
     }
 }
@@ -96,3 +96,10 @@ console.log(good1);
 
 goodslist = new GoodsList([good2, good3, good4])
 console.log('goodlist.list =', goodslist.list)
+
+basketgood3 = new BasketGood(good3, 2)
+console.log('basketgood =', basketgood3)
+basketgood4 = new BasketGood(good4, 3)
+
+basket = new Basket([basketgood3, basketgood4])
+console.log('basket =', basket)
