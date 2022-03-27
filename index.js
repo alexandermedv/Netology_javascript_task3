@@ -83,6 +83,14 @@ class Basket {
     constructor (goods) {
         this.goods = goods
     }
+
+    get totalAmount() {
+
+    }
+
+    get totalSum() {
+
+    }
 }
 
 good1 = new Goods('1', 
