@@ -27,10 +27,48 @@ class GoodsList {
         for (let i=0; i<this.#goods.length; i++) {
             if (this.#goods[i].available === 'Да') {
                 // result.length += 1;
-                result[result.length] = this.#goods[i];
+                if (filter.test(this.#goods[i]['name']) === true) {
+                    result[result.length] = this.#goods[i];
+                }
             } 
         }
+        if (this.sortPrice === true) {
+            console.log('Применяется сортировка');
+            if (this.sortDir === true) {
+                console.log('Сортировка по возрастанию');
+                result.sort(( a, b ) => {
+                    return b.price - a.price;
+                });
+            } else {
+                console.log('Сортировка по убыванию');
+                result.sort(( a, b ) => {
+                    return a.price - b.price;
+                });
+            }
+        }
+        // result.filter.test(good.name)
         return result
+    }
+
+    add (good) {
+        for (let i=0; i<this.#goods.length; i++) {
+            if (good.name === this.#goods[i].name) {
+                return console.log('Такой товар уже есть в каталоге')
+            }
+        }
+        this.#goods[this.#goods.length] = good;
+        return console.log('Товар добавлен в каталог')
+    }
+
+    remove(id) {
+        for (let i=0; i<this.#goods.length; i++) {
+            if (this.#goods[i].id === id) {
+                var id_to_del = id
+                
+            }
+        this.#goods.splice(this.#goods.id_to_del, 1)
+        }
+        return console.log('Товар удален из каталога')
     }
 }
 
@@ -84,7 +122,7 @@ good4 = new Goods(
 
 good5 = new Goods(
     '5',
-    'Кроссовки OWNTHEGAME 2.0 FTWWHT/CBLACK/GREFOU',
+    'Кроссовки OWNTHEGAME 2.0 FTWWHT/GREFOU',
     'текстиль, синтетический материал',
     [40, 41],
     5149,
@@ -94,7 +132,12 @@ good5 = new Goods(
 good1.setAvailable('Нет')
 console.log(good1);
 
-goodslist = new GoodsList([good2, good3, good4])
+goodslist = new GoodsList([good2, good4, good5], filter=/CBLACK/i, sortPrice=true, sortDir=true)
+console.log('goodlist.list =', goodslist.list)
+goodslist.add(good3)
+goodslist.add(good3)
+console.log('goodlist.list =', goodslist.list)
+goodslist.remove('4')
 console.log('goodlist.list =', goodslist.list)
 
 basketgood3 = new BasketGood(good3, 2)
