@@ -33,14 +33,14 @@ class GoodsList {
             } 
         }
         if (this.sortPrice === true) {
-            console.log('Применяется сортировка');
+            // console.log('Применяется сортировка');
             if (this.sortDir === true) {
-                console.log('Сортировка по возрастанию');
+                // console.log('Сортировка по возрастанию');
                 result.sort(( a, b ) => {
                     return b.price - a.price;
                 });
             } else {
-                console.log('Сортировка по убыванию');
+                // console.log('Сортировка по убыванию');
                 result.sort(( a, b ) => {
                     return a.price - b.price;
                 });
@@ -85,11 +85,57 @@ class Basket {
     }
 
     get totalAmount() {
-
+        var amount = 0;
+        this.goods.forEach((value, index) => {
+            amount += +value.price * +value.amount;
+        })
+        return amount
     }
 
     get totalSum() {
 
+        return this.goods.map(item => item.amount).reduce((prev, curr) => prev + curr, 0)
+    }
+
+    add(good, amount) {
+
+        let f = true;
+        for (let i=0; i<this.goods.length; i++) {
+            if (this.goods[i].id === good.id) {
+                f = false;
+                this.goods[i].amount += amount;
+            } 
+        }
+        if (f === true) {
+            this.goods[this.goods.length] = new BasketGood(good, amount)
+        }
+
+    }
+
+    remove(good, amount) {
+
+        for (let i=0; i<this.goods.length; i++) {
+            if (this.goods[i].id === good.id) {
+                if (this.goods[i].amount <= amount) {
+                    this.goods.splice(i, 1)
+                } else {
+                    this.goods[i].amount -= amount
+                }
+            }
+        }
+    }
+
+    clear() {
+        this.goods.length=0;
+    }
+
+    removeUnavailable() {
+        function checkavailable(good) {
+            if (good.available === 'Да') {
+                return good
+            }
+        }
+        this.goods = this.goods.filter(checkavailable)
     }
 }
 
@@ -138,19 +184,24 @@ good5 = new Goods(
 );
 
 good1.setAvailable('Нет')
-console.log(good1);
-
 goodslist = new GoodsList([good2, good4, good5], filter=/CBLACK/i, sortPrice=true, sortDir=true)
-console.log('goodlist.list =', goodslist.list)
 goodslist.add(good3)
 goodslist.add(good3)
-console.log('goodlist.list =', goodslist.list)
 goodslist.remove('4')
+goodslist.filter=/CBLACK/i;
+goodslist.sortPrice=true;
+goodslist.sortDir=true;
 console.log('goodlist.list =', goodslist.list)
-
 basketgood3 = new BasketGood(good3, 2)
-console.log('basketgood =', basketgood3)
 basketgood4 = new BasketGood(good4, 3)
+basketgood1 = new BasketGood(good1, 1)
+basket = new Basket([basketgood1, basketgood3, basketgood4])
+basket.removeUnavailable()
+basket.remove(good3, 1)
+basket.remove(good3, 1)
+basket.clear()
+basket.add(good3, 1)
+basket.add(good3, 1)
 
-basket = new Basket([basketgood3, basketgood4])
-console.log('basket =', basket)
+console.log('basket.totalAmount =', basket.totalAmount)
+console.log('basket.totalSum =', basket.totalSum)
